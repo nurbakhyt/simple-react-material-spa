@@ -9,8 +9,7 @@ import {
   BrowserRouter as Router,
   Route,
   Link,
-  Switch,
-  Redirect
+  Switch
 } from 'react-router-dom'
 import Main from './containers/MainContainer'
 import About from './components/About'
@@ -50,7 +49,7 @@ export default class App extends Component {
               open={this.state.open}
               onRequestChange={open => this.setState({open})}
             >
-              <Link to="/1" className="nav-link">
+              <Link to="/" className="nav-link">
                 <MenuItem onClick={this.handleClose}>Main</MenuItem>
               </Link>
               <Link to="/about" className="nav-link">
@@ -60,9 +59,8 @@ export default class App extends Component {
 
             <div className={classnames({ 'app-content': !this.state.open, 'app-content--expanded': this.state.open })}>
               <Switch>
-                <Route exact path="/about" component={About}/>
-                <Route path="/:id" component={Main}/>
-                <Redirect from='/' to='/1'/>
+                <Route exact path="/" component={Main}/>
+                <Route path="/about" component={About}/>
               </Switch>
             </div>
           </div>

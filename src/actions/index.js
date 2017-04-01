@@ -1,7 +1,8 @@
 export const INITIALIZING = 'INITIALIZING'
 export const INITIALIZED  = 'INITIALIZED'
-export const EDIT_NAME  = 'EDIT_NAME'
-export const EDIT_DESC  = 'EDIT_DESC'
+export const EDIT_NAME    = 'EDIT_NAME'
+export const EDIT_DESC    = 'EDIT_DESC'
+export const SET_FILTER   = 'SET_FILTER'
 
 const initializing = () => ({
   type: INITIALIZING
@@ -27,4 +28,9 @@ export const editDesc = (id, desc) => ({
   type: EDIT_DESC,
   id,
   desc
+})
+
+export const setFilter = selectedFilter => ({
+  type: SET_FILTER,
+  selectedFilter
 })

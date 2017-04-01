@@ -3,7 +3,8 @@ import {
   INITIALIZING,
   INITIALIZED,
   EDIT_NAME,
-  EDIT_DESC
+  EDIT_DESC,
+  SET_FILTER
 } from '../actions'
 
 const initialState = {
@@ -31,7 +32,6 @@ const data = (state = initialState, action) => {
         isLoading: false,
         items: action.data.colorsArray,
         groups: groups,
-        selectedFilter: 'all'
       }
     case EDIT_NAME:
       return {
@@ -52,6 +52,11 @@ const data = (state = initialState, action) => {
           }
           return item
         })
+      }
+    case SET_FILTER:
+      return {
+        ...state,
+        selectedFilter: action.selectedFilter
       }
     default:
       return state

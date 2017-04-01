@@ -1,10 +1,4 @@
 import React, { Component, PropTypes } from 'react'
-import {
-  Route,
-  Link,
-  Switch
-} from 'react-router-dom'
-import classnames from 'classnames'
 import ToLeft from 'material-ui/svg-icons/navigation/arrow-back'
 import ToRight from 'material-ui/svg-icons/navigation/arrow-forward'
 import CircularProgress from 'material-ui/CircularProgress'
@@ -25,8 +19,10 @@ export default class Main extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      id: 0,
       name: '',
-      description: ''
+      description: '',
+      index: 1
     }
   }
 
@@ -35,11 +31,12 @@ export default class Main extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { users, match } = this.props
+    const { users } = this.props
     if (nextProps.users.length) {
       this.setState((prevState, props) => ({
-        name: props.users.find(item => item.id === parseInt(nextProps.match.params.id) - 1).name,
-        description: props.users.find(item => item.id === parseInt(nextProps.match.params.id) - 1).description
+        id: props.users[0].id,
+        name: props.users[0].name,
+        description: props.users[0].description
       }))
     }
   }
@@ -47,26 +44,56 @@ export default class Main extends Component {
   handleChange(event, value) {
 		// event.preventDefault()
 		this.setState({ [event.target.name]: value })
-    console.log(this.state)
 	}
 
   handleEdit(field) {
     const { onEditName, onEditDesc, match } = this.props
     switch (field) {
       case 'name':
-        onEditName(parseInt(match.params.id) - 1, this.state.name)
+        onEditName(this.state.id, this.state.name)
         return 0
       case 'description':
-        onEditDesc(parseInt(match.params.id) - 1, this.state.description)
+        onEditDesc(this.state.id, this.state.description)
         return 0
       default:
         return 0
     }
   }
 
+  handlePrevious(e) {
+    e.preventDefault()
+    this.setState((prevState, props) => ({
+      id: props.users.find(item => item.id === this.state.id - 1).id,
+      name: props.users.find(item => item.id === this.state.id - 1).name,
+      description: props.users.find(item => item.id === this.state.id - 1).description,
+      index: this.state.index - 1
+    }))
+  }
+
+  handleForward(e) {
+    e.preventDefault()
+    const { users } = this.props
+    this.setState({
+      id: users.find(item => item.id === this.state.id + 1).id,
+      name: users.find(item => item.id === this.state.id + 1).name,
+      description: users.find(item => item.id === this.state.id + 1).description,
+      index: this.state.index + 1
+    })
+  }
+
+  handleGroup(filter) {
+    const { onSetFilter } = this.props
+    onSetFilter(filter)
+    this.setState({ index: 1})
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // console.log('componentDidUpdate 1', prevProps, prevState)
+    // console.log('componentDidUpdate 2', this.props, this.state)
+  }
+
   render() {
     const { isLoading, groups, users, selectedFilter, match } = this.props
-    console.log('groups', groups && groups.length)
 
     return (
       <div style={{ textAlign: 'center', paddingTop: 32}}>
@@ -74,11 +101,13 @@ export default class Main extends Component {
           {isLoading && <CircularProgress />}
         </div>
 
-        <FlatButton label="all" />
+        <FlatButton label="all" onTouchTap={this.handleGroup.bind(this, 'all')} primary={selectedFilter === 'all'} />
         {groups &&
           groups.map((group, i) => <FlatButton
             key={i}
             label={group}
+            primary={selectedFilter === group}
+            onTouchTap={this.handleGroup.bind(this, group)}
           />)
         }
 
@@ -103,8 +132,10 @@ export default class Main extends Component {
         </form>
 
         <Pagination
-          current={parseInt(match.params.id)}
+          current={this.state.index}
           length={users.length}
+          onPrevious={this.handlePrevious.bind(this)}
+          onForward={this.handleForward.bind(this)}
         />
       </div>
     )
@@ -117,15 +148,15 @@ const Pagination = ({ current, length, onForward, onPrevious }) => {
   return (
     <div>
       {prev
-        && <Link to={`${prev}`}>
+        && <a href="#" onClick={onPrevious}>
             <ToLeft />
-          </Link>
+          </a>
       }
       {current} from {length}
       {next
-        && <Link to={`${next}`}>
+        && <a href="#" onClick={onForward}>
             <ToRight />
-          </Link>
+          </a>
       }
     </div>
   )

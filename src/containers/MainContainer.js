@@ -2,11 +2,12 @@ import { connect } from 'react-redux'
 import Main from '../components/Main'
 import {
   editName,
-  editDesc
+  editDesc,
+  setFilter
 } from '../actions'
 
 const getFilteredData = (users, filter) => {
-  if (filter == 'all') {
+  if (filter === 'all') {
     return users
   } else {
     return users.filter(user => user.group === filter)
@@ -28,6 +29,9 @@ const mapDispatchToProps = dispatch => ({
   onEditDesc(id, desc) {
     dispatch(editDesc(id, desc))
     console.log('action', id, desc)
+  },
+  onSetFilter(filter) {
+    dispatch(setFilter(filter))
   }
 })
 
