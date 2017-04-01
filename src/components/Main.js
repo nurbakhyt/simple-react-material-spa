@@ -31,7 +31,6 @@ export default class Main extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { users } = this.props
     if (nextProps.users.length) {
       this.setState((prevState, props) => ({
         id: props.users[0].id,
@@ -47,7 +46,7 @@ export default class Main extends Component {
 	}
 
   handleEdit(field) {
-    const { onEditName, onEditDesc, match } = this.props
+    const { onEditName, onEditDesc } = this.props
     switch (field) {
       case 'name':
         onEditName(this.state.id, this.state.name)
@@ -93,7 +92,7 @@ export default class Main extends Component {
   }
 
   render() {
-    const { isLoading, groups, users, selectedFilter, match } = this.props
+    const { isLoading, groups, users, selectedFilter } = this.props
 
     return (
       <div style={{ textAlign: 'center', paddingTop: 32}}>
