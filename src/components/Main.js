@@ -50,12 +50,12 @@ export default class Main extends Component {
     switch (field) {
       case 'name':
         onEditName(this.state.id, this.state.name)
-        return 0
+        break
       case 'description':
         onEditDesc(this.state.id, this.state.description)
-        return 0
+        break
       default:
-        return 0
+        break
     }
   }
 
