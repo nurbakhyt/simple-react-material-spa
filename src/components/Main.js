@@ -1,9 +1,8 @@
 import React, { Component, PropTypes } from 'react'
-import ToLeft from 'material-ui/svg-icons/navigation/arrow-back'
-import ToRight from 'material-ui/svg-icons/navigation/arrow-forward'
 import CircularProgress from 'material-ui/CircularProgress'
-import TextField from 'material-ui/TextField'
-import FlatButton from 'material-ui/FlatButton'
+import Pagination from './Pagination'
+import FilterLinks from './FilterLinks'
+import Form from './Form'
 
 export default class Main extends Component {
 
@@ -35,14 +34,14 @@ export default class Main extends Component {
       this.setState((prevState, props) => ({
         id: props.users[0].id,
         name: props.users[0].name,
-        description: props.users[0].description
+        description: props.users[0].description,
+        index: 1
       }))
     }
   }
 
-  handleChange(event, value) {
-		// event.preventDefault()
-		this.setState({ [event.target.name]: value })
+  handleChange(name, value) {
+		this.setState({ [name]: value })
 	}
 
   handleEdit(field) {
@@ -86,11 +85,6 @@ export default class Main extends Component {
     this.setState({ index: 1})
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    // console.log('componentDidUpdate 1', prevProps, prevState)
-    // console.log('componentDidUpdate 2', this.props, this.state)
-  }
-
   render() {
     const { isLoading, groups, users, selectedFilter } = this.props
 
@@ -100,35 +94,18 @@ export default class Main extends Component {
           {isLoading && <CircularProgress />}
         </div>
 
-        <FlatButton label="all" onTouchTap={this.handleGroup.bind(this, 'all')} primary={selectedFilter === 'all'} />
-        {groups &&
-          groups.map((group, i) => <FlatButton
-            key={i}
-            label={group}
-            primary={selectedFilter === group}
-            onTouchTap={this.handleGroup.bind(this, group)}
-          />)
-        }
+        <FilterLinks
+          onClick={this.handleGroup.bind(this)}
+          selected={selectedFilter}
+          groups={groups}
+        />
 
-        <form>
-          <TextField
-            name="name"
-            hintText="Name"
-            value={this.state.name}
-            onChange={this.handleChange.bind(this)}
-          />
-          <FlatButton label="Edit" primary={true} onTouchTap={this.handleEdit.bind(this, 'name')} />
-          <br />
-          <TextField
-            name="description"
-            hintText="Description"
-            multiLine={true}
-            rows={2}
-            value={this.state.description}
-            onChange={this.handleChange.bind(this)}
-          />
-          <FlatButton label="Edit" primary={true} onTouchTap={this.handleEdit.bind(this, 'description')} />
-        </form>
+        <Form
+          name={this.state.name}
+          description={this.state.description}
+          onChange={this.handleChange.bind(this)}
+          onEdit={this.handleEdit.bind(this)}
+        />
 
         <Pagination
           current={this.state.index}
@@ -139,24 +116,4 @@ export default class Main extends Component {
       </div>
     )
   }
-}
-
-const Pagination = ({ current, length, onForward, onPrevious }) => {
-  const prev = current > 1 ? current - 1 : null
-  const next = current < length ? current + 1 : null
-  return (
-    <div>
-      {prev
-        && <a href="#" onClick={onPrevious}>
-            <ToLeft />
-          </a>
-      }
-      {current} from {length}
-      {next
-        && <a href="#" onClick={onForward}>
-            <ToRight />
-          </a>
-      }
-    </div>
-  )
 }
