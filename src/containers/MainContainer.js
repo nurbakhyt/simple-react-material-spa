@@ -24,11 +24,9 @@ const mapStateToProps = store => ({
 const mapDispatchToProps = dispatch => ({
   onEditName(id, name) {
     dispatch(editName(id, name))
-    console.log('action', id, name)
   },
   onEditDesc(id, desc) {
     dispatch(editDesc(id, desc))
-    console.log('action', id, desc)
   },
   onSetFilter(filter) {
     dispatch(setFilter(filter))
